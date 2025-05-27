@@ -1,32 +1,68 @@
+-- 1.5 – Procedimento com VARIADIC
+-- DO
+-- $$
+-- DECLARE
+--     v_msg TEXT := '';
+-- BEGIN
+--     CALL sp_cadastrar_clientes(ARRAY['Pedro', 'Ana', 'Jennyfer', 'Murilo'], v_msg);
+--     RAISE NOTICE '%', v_msg;
+-- END;
+-- $$
+
+-- CREATE OR REPLACE PROCEDURE sp_cadastrar_clientes (
+--     p_nomes TEXT[],     
+--     INOUT p_mensagem TEXT,
+--     VARIADIC p_nomes TEXT[]
+-- )
+-- LANGUAGE plpgsql
+-- AS 
+-- $$
+-- DECLARE
+--     nome TEXT;
+-- BEGIN
+--     FOREACH nome IN ARRAY p_nomes
+--     LOOP
+--         INSERT INTO tb_cliente (nome) VALUES (nome);
+--     END LOOP;
+
+--     p_mensagem := 'Os clientes: ' || array_to_string(p_nomes, ', ') || ' foram cadastrados';
+
+--     INSERT INTO log_sistema (nome_procedimento, log_data)
+--     VALUES ('sp_cadastrar_clientes', NOW());
+-- END;
+-- $$
+
+---------------------------------------------------------------------------------------
+
 -- 1.4 – Procedimento com parâmetro INOUT
 
-DO $$
-DECLARE
-    v_cod_cliente INT := 1;
-BEGIN
-    CALL sp_total_pedido_inout(v_cod_cliente);
-    RAISE NOTICE 'O cliente fez % pedidos', v_cod_cliente;
-END;
-$$
+-- DO $$
+-- DECLARE
+--     v_cod_cliente INT := 1;
+-- BEGIN
+--     CALL sp_total_pedido_inout(v_cod_cliente);
+--     RAISE NOTICE 'O cliente fez % pedidos', v_cod_cliente;
+-- END;
+-- $$
 
-CREATE OR REPLACE PROCEDURE sp_total_pedido_inout (
-    INOUT p_cod_cliente INT
-)
-LANGUAGE plpgsql
-AS 
-$$
-DECLARE
-    v_total INT;
-BEGIN
-    SELECT COUNT(*)
-    INTO v_total
-    FROM tb_pedido
-    WHERE cod_cliente = p_cod_cliente;
-    p_cod_cliente := v_total;
+-- CREATE OR REPLACE PROCEDURE sp_total_pedido_inout (
+--     INOUT p_cod_cliente INT
+-- )
+-- LANGUAGE plpgsql
+-- AS 
+-- $$
+-- DECLARE
+--     v_total INT;
+-- BEGIN
+--     SELECT COUNT(*)
+--     INTO v_total
+--     FROM tb_pedido
+--     WHERE cod_cliente = p_cod_cliente;
+--     p_cod_cliente := v_total;
 
-    INSERT INTO log_sistema (nome_procedimento) VALUES ('sp_total_pedido_inout');
-END;
-$$
+--     INSERT INTO log_sistema (nome_procedimento) VALUES ('sp_total_pedido_inout');
+-- END;
+-- $$
 -----------------------------------------------------------------------------------------
 
 -- 1.3 - Procedimento com parâmetro de saída (OUT)
